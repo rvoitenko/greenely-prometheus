@@ -184,7 +184,7 @@ def main():
             spot_price.set(get_current_spot_price())
             el_usage.set(get_usage())
             total_el_usage.set(get_daily_usage())
-            time.sleep(60)
+            time.sleep(1800)
 
 
 if __name__ == "__main__":
