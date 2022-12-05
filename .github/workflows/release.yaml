@@ -1,0 +1,42 @@
+name: release
+on:
+  push:
+    tags:
+      - '*'
+    branches:
+      - 'master'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  test:
+    name: Build and package
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_CLI_EXPERIMENTAL: "enabled"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Get tag
+      id: repository
+      run: echo  "::set-output name=tag::$(git describe --tags HEAD)"
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+        tags: ghcr.io/${{ github.repository }}:${{ steps.repository.outputs.tag }}
