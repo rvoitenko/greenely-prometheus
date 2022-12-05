@@ -122,7 +122,7 @@ def get_usage():
         data = response.json()
         for value in data['data']:
             usage = data['data'][value]['usage']
-        return usage
+        return round(usage/1000, 1)
     else:
         _LOGGER.error('Failed to fetch usage data, %s', response.text)
         return data
@@ -149,16 +149,41 @@ def get_current_spot_price():
         return data
 
 
+def get_daily_usage():
+    today = datetime.today()
+    endDate = datetime.now().replace(hour=0,
+                                     minute=0,
+                                     second=0,
+                                     microsecond=0) - timedelta(days=1)
+    startDate = endDate - timedelta(days=30)
+    start = "?from=" + str(startDate.year) + "-" + today.strftime("%m") + '-' + '01'
+    end = "&to=" + str(endDate.year) + "-" + endDate.strftime("%m") + '-' + str(endDate.day)
+    url = url_facilities_base + facility_id + '/consumption' + start + end + "&resolution=" + "daily"
+    response = requests.get(url, headers=headers)
+    data = {}
+    if response.status_code == requests.codes.ok:
+        data = response.json()
+        total_usage = 0
+        for value in data['data']:
+            total_usage += data['data'][value]['usage']
+        return round(total_usage / 1000, 1)
+    else:
+        _LOGGER.error('Failed to fetch usage data, %s', response.text)
+        return data
+
 def main():
     """Main entry point"""
     if check_auth():
         spot_price = Gauge("greenely_spot_price", "current price per kWh")
-        el_usage = Gauge("usage", "last daily usage, kWh")
+        el_usage = Gauge("greenely_el_usage", "last daily usage, kWh")
+        total_el_usage=Gauge("greenely_total_usage", "total usage from month beginning, kWh")
+
         start_http_server(9101)
 
         while True:
             spot_price.set(get_current_spot_price())
             el_usage.set(get_usage())
+            total_el_usage.set(get_daily_usage())
             time.sleep(60)
 
 
