@@ -165,7 +165,8 @@ def get_daily_usage():
         data = response.json()
         total_usage = 0
         for value in data['data']:
-            total_usage += data['data'][value]['usage']
+            if data['data'][value]['usage'] is not None:
+                total_usage += data['data'][value]['usage']
         return round(total_usage / 1000, 1)
     else:
         _LOGGER.error('Failed to fetch usage data, %s', response.text)
