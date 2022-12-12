@@ -112,7 +112,7 @@ def get_usage():
                                      minute=0,
                                      second=0,
                                      microsecond=0) - timedelta(days=1)
-    startDate = endDate - timedelta(days=2)
+    startDate = endDate - timedelta(days=3)
     start = "?from=" + str(startDate.year) + "-" + startDate.strftime("%m") + '-' + str(startDate.day)
     end = "&to=" + str(endDate.year) + "-" + endDate.strftime("%m") + '-' + str(endDate.day)
     url = url_facilities_base + facility_id + '/consumption' + start + end + "&resolution=" + "daily"
@@ -179,6 +179,7 @@ def main():
         spot_price = Gauge("greenely_spot_price", "current price per kWh")
         el_usage = Gauge("greenely_last_day_usage", "last daily usage, kWh")
         total_el_usage=Gauge("greenely_total_usage", "total usage from month beginning, kWh")
+
 
         start_http_server(9101)
 
