@@ -112,7 +112,7 @@ def get_usage():
                                      minute=0,
                                      second=0,
                                      microsecond=0) - timedelta(days=1)
-    startDate = endDate - timedelta(days=3)
+    startDate = endDate - timedelta(days=5)
     start = "?from=" + str(startDate.year) + "-" + startDate.strftime("%m") + '-' + str(startDate.day)
     end = "&to=" + str(endDate.year) + "-" + endDate.strftime("%m") + '-' + str(endDate.day)
     url = url_facilities_base + facility_id + '/consumption' + start + end + "&resolution=" + "daily"
