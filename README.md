@@ -1,10 +1,13 @@
 # greenely-prometheus
 
-PoC for grab metrics from Greenely API and provide them as Prometheus metrics.
+Prometheus exporter for grab metrics from Greenely API and provide them as Prometheus metrics.
+
+## Why ?
+To compare spot prices from Greenely with i.e. Vattenfall to choose the best supplier.
 
 ## Usage
 
-https://hub.docker.com/repository/docker/rvoitenko/greenely-prometheus/general
+https://hub.docker.com/r/rvoitenko/greenely-prometheus
 
 ```shell
 docker run -it --rm  -p 9101:9101 --env=GR_EMAIL=YOUR_EMAIL --env=GR_PASSWORD=YOUR_PASS rvoitenko/greenely-prometheus:latest
@@ -23,3 +26,5 @@ greenely_last_day_usage 38.2
 # TYPE greenely_total_usage gauge
 greenely_total_usage 101.7
 ```
+
+![](grafana.png)
